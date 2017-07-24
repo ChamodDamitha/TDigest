@@ -545,7 +545,6 @@ public abstract class AVLTree {
             }
         }
 
-
         //      used node is made available for reuse
         void release(int node) {
 //            assert node < nextNode;
