@@ -137,7 +137,7 @@ final class AVLGroupTree{
     public int floorNode(double centroid) {
         int floor = AVLTree.NIL;
         for (int node = tree.root(); node != AVLTree.NIL; ) {
-            final int cmp = Double.compare(centroid, mean(node));
+            int cmp = Double.compare(centroid, mean(node));
             if (cmp <= 0) {
                 node = tree.leftNode(node);
             } else {
@@ -155,8 +155,8 @@ final class AVLGroupTree{
     public int floorSumNode(long sum) {
         int floor = AVLTree.NIL;
         for (int node = tree.root(); node != AVLTree.NIL; ) {
-            final int left = tree.leftNode(node);
-            final long leftCount = aggregatedCounts[left];
+            int left = tree.leftNode(node);
+            long leftCount = aggregatedCounts[left];
             if (leftCount <= sum) {
                 floor = node;
                 sum -= leftCount + count(node);
@@ -180,14 +180,19 @@ final class AVLGroupTree{
      * is strictly before node
      */
     public long headSum(int node) {
-        final int left = tree.leftNode(node);
+        int left = tree.leftNode(node);
         long sum = aggregatedCounts[left];
-        for (int n = node, p = tree.parentNode(node); p != AVLTree.NIL; n = p, p = tree.parentNode(n)) {
+        int n = node;
+        int p = tree.parentNode(node);
+
+        while ( p != AVLTree.NIL) {
             if (n == tree.rightNode(p)) {
-                final int leftP = tree.leftNode(p);
-                sum += counts[p] + aggregatedCounts[leftP];
+                sum += counts[p] + aggregatedCounts[tree.leftNode(p)];
             }
+            n = p;
+            p = tree.parentNode(n);
         }
+
         return sum;
     }
 

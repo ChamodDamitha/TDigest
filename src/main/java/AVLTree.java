@@ -7,7 +7,7 @@ import java.util.Arrays;
  * An AVL-tree structure of integers used to effectively insert and search data
  * the time complexity for searching is O(lg(n)), n is the number of nodes
  */
-abstract class AVLTree {
+public abstract class AVLTree {
 
     protected static final int NIL = 0;
 
@@ -191,7 +191,8 @@ abstract class AVLTree {
 
 //        tree is not empty
         else {
-            int node = rootNode; assert parentNode(rootNode) == NIL;
+            int node = rootNode;
+//            assert parentNode(rootNode) == NIL;
             int parent;// to track the final node
             int cmp;
             do {
@@ -218,7 +219,7 @@ abstract class AVLTree {
             if (cmp < 0) {
                 setLeftNode(parent, node);
             } else {
-                assert cmp > 0;
+//                assert cmp > 0;
                 setRightNode(parent, node);
             }
 
@@ -233,8 +234,8 @@ abstract class AVLTree {
      */
     public void updateNode(int node) {
         //        find the closest nodes from both sides
-        final int prev = previousNode(node);
-        final int next = nextNode(node);
+        int prev = previousNode(node);
+        int next = nextNode(node);
 
 //      if node value is in between prev and next values
         if ((prev == NIL || compare(prev) > 0) && (next == NIL || compare(next) < 0)) {
@@ -259,15 +260,15 @@ abstract class AVLTree {
 
 //        have both children
         if (leftNode(node) != NIL && rightNode(node) != NIL) {
-            final int next = nextNode(node);
-            assert next != NIL;
+            int next = nextNode(node);
+//            assert next != NIL;
             swapNodes(node, next);
         }
 
 //        have less than 2 children
-        assert leftNode(node) == NIL || rightNode(node) == NIL;
+//        assert leftNode(node) == NIL || rightNode(node) == NIL;
 
-        final int parent = parentNode(node);
+        int parent = parentNode(node);
         int child = leftNode(node);
         if (child == NIL) {
             child = rightNode(node);
@@ -276,13 +277,13 @@ abstract class AVLTree {
 //        have no children
         if (child == NIL) {
             if (node == rootNode) {
-                assert size() == 1 : size();
+//                assert size() == 1 : size();
                 rootNode = NIL;
             } else {
                 if (node == leftNode(parent)) {
                     setLeftNode(parent, NIL);
                 } else {
-                    assert node == rightNode(parent);
+//                    assert node == rightNode(parent);
                     setRightNode(parent, NIL);
                 }
             }
@@ -290,12 +291,12 @@ abstract class AVLTree {
 //        have 1 child
         else {
             if (node == rootNode) {
-                assert size() == 2;
+//                assert size() == 2;
                 rootNode = child;
             } else if (node == leftNode(parent)) {
                 setLeftNode(parent, child);
             } else {
-                assert node == rightNode(parent);
+//                assert node == rightNode(parent);
                 setRightNode(parent, child);
             }
             setParentNode(child, parent);
@@ -321,30 +322,30 @@ abstract class AVLTree {
      * @param node2
      */
     private void swapNodes(int node1, int node2) {
-        final int parent1 = parentNode(node1);
-        final int parent2 = parentNode(node2);
+        int parent1 = parentNode(node1);
+        int parent2 = parentNode(node2);
 
 //      set children of parents of parent1 and parent2
         if (parent1 != NIL) {
             if (node1 == leftNode(parent1)) {
                 setLeftNode(parent1, node2);
             } else {
-                assert node1 == rightNode(parent1);
+//                assert node1 == rightNode(parent1);
                 setRightNode(parent1, node2);
             }
         } else {
-            assert rootNode == node1;
+//            assert rootNode == node1;
             rootNode = node2;
         }
         if (parent2 != NIL) {
             if (node2 == leftNode(parent2)) {
                 setLeftNode(parent2, node1);
             } else {
-                assert node2 == rightNode(parent2);
+//                assert node2 == rightNode(parent2);
                 setRightNode(parent2, node1);
             }
         } else {
-            assert rootNode == node2;
+//            assert rootNode == node2;
             rootNode = node1;
         }
 
@@ -353,10 +354,10 @@ abstract class AVLTree {
         setParentNode(node1, parent2);
         setParentNode(node2, parent1);
 
-        final int left1 = leftNode(node1);
-        final int left2 = leftNode(node2);
-        final int right1 = rightNode(node1);
-        final int right2 = rightNode(node2);
+        int left1 = leftNode(node1);
+        int left2 = leftNode(node2);
+        int right1 = rightNode(node1);
+        int right2 = rightNode(node2);
 
 
 //        set children of node1 and node2
@@ -383,8 +384,8 @@ abstract class AVLTree {
 
 
 //        set depths of node1 and node2
-        final int depth1 = depth(node1);
-        final int depth2 = depth(node2);
+        int depth1 = depth(node1);
+        int depth2 = depth(node2);
         setDepth(node1, depth2);
         setDepth(node2, depth1);
     }
@@ -405,20 +406,20 @@ abstract class AVLTree {
      */
     private void rebalance(int node) {
         for (int n = node; n != NIL; ) {
-            final int p = parentNode(n);
+            int p = parentNode(n);
 
             fixAggregateCounts(n);
 
             switch (balanceFactor(n)) {
                 case -2:
-                    final int right = rightNode(n);
+                    int right = rightNode(n);
                     if (balanceFactor(right) == 1) {
                         rotateRight(right);
                     }
                     rotateLeft(n);
                     break;
                 case 2:
-                    final int left = leftNode(n);
+                    int left = leftNode(n);
                     if (balanceFactor(left) == -1) {
                         rotateLeft(left);
                     }
@@ -449,20 +450,20 @@ abstract class AVLTree {
      * @param node is the node
      */
     private void rotateLeft(int node) {
-        final int r = rightNode(node);
-        final int lr = leftNode(r);
+        int r = rightNode(node);
+        int lr = leftNode(r);
         setRightNode(node, lr);
         if (lr != NIL) {
             setParentNode(lr, node);
         }
-        final int p = parentNode(node);
+        int p = parentNode(node);
         setParentNode(r, p);
         if (p == NIL) {
             rootNode = r;
         } else if (leftNode(p) == node) {
             setLeftNode(p, r);
         } else {
-            assert rightNode(p) == node;
+//            assert rightNode(p) == node;
             setRightNode(p, r);
         }
         setLeftNode(r, node);
@@ -476,20 +477,20 @@ abstract class AVLTree {
      * @param node is the node
      */
     private void rotateRight(int node) {
-        final int l = leftNode(node);
-        final int rl = rightNode(l);
+        int l = leftNode(node);
+        int rl = rightNode(l);
         setLeftNode(node, rl);
         if (rl != NIL) {
             setParentNode(rl, node);
         }
-        final int p = parentNode(node);
+        int p = parentNode(node);
         setParentNode(l, p);
         if (p == NIL) {
             rootNode = l;
         } else if (rightNode(p) == node) {
             setRightNode(p, l);
         } else {
-            assert leftNode(p) == node;
+//            assert leftNode(p) == node;
             setLeftNode(p, l);
         }
         setRightNode(l, node);
@@ -499,25 +500,27 @@ abstract class AVLTree {
     }
 
     private void setParentNode(int node, int parent) {
-        assert node != NIL;
+//        assert node != NIL;
         this.parentNodes[node] = parent;
     }
 
     private void setLeftNode(int node, int left) {
-        assert node != NIL;
+//        assert node != NIL;
         this.leftNodes[node] = left;
     }
 
     private void setRightNode(int node, int right) {
-        assert node != NIL;
+//        assert node != NIL;
         this.rightNodes[node] = right;
     }
 
     private void setDepth(int node, int depth) {
-        assert node != NIL;
-        assert depth >= 0 && depth <= Byte.MAX_VALUE;
+//        assert node != NIL;
+//        assert depth >= 0 && depth <= Byte.MAX_VALUE;
         this.depths[node] = (byte) depth;
     }
+
+
 
 
 
@@ -525,7 +528,7 @@ abstract class AVLTree {
     private static class NodeAllocator {
 
         private int nextNode;
-        private final IntStack releasedNodes;
+        private IntStack releasedNodes;
 
         NodeAllocator() {
             nextNode = NIL + 1;
@@ -545,7 +548,7 @@ abstract class AVLTree {
 
         //      used node is made available for reuse
         void release(int node) {
-            assert node < nextNode;
+//            assert node < nextNode;
             releasedNodes.push(node);
         }
 

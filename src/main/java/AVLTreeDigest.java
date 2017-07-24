@@ -23,7 +23,7 @@ public class AVLTreeDigest extends TDigest {
 
 //        empty tree
         if (start == AVLTree.NIL) {
-            assert avlGroupTree.size() == 0; // empty avlGroupTree
+//            assert avlGroupTree.size() == 0; // empty avlGroupTree
             avlGroupTree.add(x, w);
             count = w;
         }
@@ -51,7 +51,7 @@ public class AVLTreeDigest extends TDigest {
             long sum = avlGroupTree.headSum(start);
             double n = 0;
             for (int neighbor = start; neighbor != lastNeighbor; neighbor = avlGroupTree.nextNode(neighbor)) {
-                assert minDistance == Math.abs(avlGroupTree.mean(neighbor) - x);
+//                assert minDistance == Math.abs(avlGroupTree.mean(neighbor) - x);
                 double q = count == 1 ? 0.5 : (sum + (avlGroupTree.count(neighbor) - 1) / 2.0) / (count - 1);
                 double k = 4 * count * q * (1 - q) / compression;
 
@@ -102,19 +102,19 @@ public class AVLTreeDigest extends TDigest {
         this.avlGroupTree = new AVLGroupTree();
 
 //        fill nodes in ascending order
-        final int[] nodes = new int[centroids.size()];
+        int[] nodes = new int[centroids.size()];
         nodes[0] = centroids.leastNode();
         for (int i = 1; i < nodes.length; ++i) {
             nodes[i] = centroids.nextNode(nodes[i - 1]);
-            assert nodes[i] != AVLTree.NIL;
+//            assert nodes[i] != AVLTree.NIL;
         }
-        assert centroids.nextNode(nodes[nodes.length - 1]) == AVLTree.NIL;
+//        assert centroids.nextNode(nodes[nodes.length - 1]) == AVLTree.NIL;
 
 
 //        randomly swap the nodes
         for (int i = centroids.size() - 1; i > 0; --i) {
-            final int other = gen.nextInt(i + 1);
-            final int tmp = nodes[other];
+            int other = gen.nextInt(i + 1);
+            int tmp = nodes[other];
             nodes[other] = nodes[i];
             nodes[i] = tmp;
         }
@@ -154,32 +154,32 @@ public class AVLTreeDigest extends TDigest {
 
         double previousMean = Double.NaN, previousIndex = 0;
         int next = groupTree.floorSumNode((long) index);
-        assert next != AVLTree.NIL;
+//        assert next != AVLTree.NIL;
         long total = groupTree.headSum(next);
-        final int prev = groupTree.previousNode(next);
+        int prev = groupTree.previousNode(next);
         if (prev != AVLTree.NIL) {
             previousMean = groupTree.mean(prev);
             previousIndex = total - ((groupTree.count(prev) + 1.0) / 2);
         }
 
         while (true) {
-            final double nextIndex = total + ((groupTree.count(next) - 1.0) / 2);
+            double nextIndex = total + ((groupTree.count(next) - 1.0) / 2);
 
             if (nextIndex >= index) {
                 if (Double.isNaN(previousMean)) {
-                    assert total == 0 : total;
+//                    assert total == 0 : total;
                     if (nextIndex == previousIndex) {
                         return groupTree.mean(next);
                     }
                     int next2 = groupTree.nextNode(next);
-                    final double nextIndex2 = total + groupTree.count(next) + (groupTree.count(next2) - 1.0) / 2;
+                    double nextIndex2 = total + groupTree.count(next) + (groupTree.count(next2) - 1.0) / 2;
                     previousMean = (nextIndex2 * groupTree.mean(next) - nextIndex * groupTree.mean(next2)) / (nextIndex2 - nextIndex);
                 }
                 return quantile(index, previousIndex, nextIndex, previousMean, groupTree.mean(next));
             }
             else if (groupTree.nextNode(next) == AVLTree.NIL) {
-                final double nextIndex2 = count - 1;
-                final double nextMean2 = (groupTree.mean(next) * (nextIndex2 - previousIndex) - previousMean * (nextIndex2 - nextIndex)) / (nextIndex - previousIndex);
+                double nextIndex2 = count - 1;
+                double nextMean2 = (groupTree.mean(next) * (nextIndex2 - previousIndex) - previousMean * (nextIndex2 - nextIndex)) / (nextIndex - previousIndex);
                 return quantile(index, nextIndex, nextIndex2, groupTree.mean(next), nextMean2);
             }
             total += groupTree.count(next);
