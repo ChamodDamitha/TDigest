@@ -3,11 +3,12 @@
  */
 public class Main {
     public static void main(String[] args) {
-        TDigest tdigest = TDigest.createDigest(100);
+        TDigest tdigest = TDigest.createDigest(0.1, 0.01);
 
-        for(double i = 0; i< 1000; i++){
+        for(double i = 0; i< 1000000; i++){
             tdigest.add(i);
-            System.out.print(tdigest.quantile(0.5)+", ");
+            System.out.println(tdigest.percentile(0.1)+" ");
+//            tdigest.percentile(0.5);
         }
     }
 }

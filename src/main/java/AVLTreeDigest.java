@@ -129,18 +129,18 @@ public class AVLTreeDigest extends TDigest {
 
 
     /**
-     * @param q The quantile in the range [0,1].
+     * @param q The percentile in the range [0,1].
      * @return
      */
     @Override
-    public double quantile(double q) {
+    public double percentile(double q) {
         if (q < 0 || q > 1) {
             throw new IllegalArgumentException("q should be in [0,1], got " + q);
         }
 
         AVLGroupTree groupTree = avlGroupTree;
 
-//        empty tree, So no quantile
+//        empty tree, So no percentile
         if (groupTree.size() == 0) {
             return Double.NaN;
         }
@@ -175,12 +175,12 @@ public class AVLTreeDigest extends TDigest {
                     double nextIndex2 = total + groupTree.count(next) + (groupTree.count(next2) - 1.0) / 2;
                     previousMean = (nextIndex2 * groupTree.mean(next) - nextIndex * groupTree.mean(next2)) / (nextIndex2 - nextIndex);
                 }
-                return quantile(index, previousIndex, nextIndex, previousMean, groupTree.mean(next));
+                return percentile(index, previousIndex, nextIndex, previousMean, groupTree.mean(next));
             }
             else if (groupTree.nextNode(next) == AVLTree.NIL) {
                 double nextIndex2 = count - 1;
                 double nextMean2 = (groupTree.mean(next) * (nextIndex2 - previousIndex) - previousMean * (nextIndex2 - nextIndex)) / (nextIndex - previousIndex);
-                return quantile(index, nextIndex, nextIndex2, groupTree.mean(next), nextMean2);
+                return percentile(index, nextIndex, nextIndex2, groupTree.mean(next), nextMean2);
             }
             total += groupTree.count(next);
             previousMean = groupTree.mean(next);
