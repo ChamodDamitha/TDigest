@@ -32,8 +32,11 @@ public abstract class TDigest {
      * @return
      */
     public static TDigest createDigest(double percentile, double accuracy){
-//      accuracy = 4 * percentile * (1 - percentile) * certainty = percentile * (1 - percentile) / compression
+//      accuracy = 4 * percentile * (1 - percentile) * certainty = 4 * percentile * (1 - percentile) / compression
         double compression = 4 * percentile * (1 - percentile) / accuracy;
+        if (compression < 1) {
+            throw new IllegalArgumentException("a lower accuracy of " + accuracy + " cannot be achieved");
+        }
         return createDigest(compression);
     }
 
