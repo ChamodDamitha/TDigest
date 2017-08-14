@@ -32,8 +32,8 @@ public abstract class TDigest {
      * @return
      */
     public static TDigest createDigest(double percentile, double accuracy){
-//      accuracy = percentile * (1 - percentile) * certainty = percentile * (1 - percentile) / compression
-        double compression = percentile * (1 - percentile) / accuracy;
+//      accuracy = 4 * percentile * (1 - percentile) * certainty = percentile * (1 - percentile) / compression
+        double compression = 4 * percentile * (1 - percentile) / accuracy;
         return createDigest(compression);
     }
 
